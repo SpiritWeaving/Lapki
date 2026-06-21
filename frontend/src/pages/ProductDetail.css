@@ -1,13 +1,12 @@
 .product{
     margin-inline: auto;
-    width: 90%;
     display: grid;
     gap: 40px;
-    grid-template-columns: 450px 1fr 1fr;
+    grid-template-columns: 450px 1.2fr 1fr;
     text-align: left;
 }
 
-.product__img-section{
+.product__section--img{
     height: 450px;
     overflow: hidden;
     border: 1px dotted gray;
@@ -17,14 +16,6 @@
     width: 100%;
 }
 
-.product__description-paragraph{
-    text-align: left;
-}
-
-.product__title{
-    margin-block: 10px;
-}
-
 .product__img{
     width: 100%;
     height: 100%;
@@ -32,15 +23,19 @@
     object-position: center;
 }
 
+.product__description-paragraph{
+    text-align: left;
+}
+
+.product__title{
+    margin-block: 10px;
+    border-bottom: 1px gray solid;
+    padding-bottom: 1rem;
+}
+
 /* Цены */
 .product__price{
     margin-bottom: 10px;
-}
-
-.button-controls{
-    display: flex;
-    gap: 8px;
-    justify-content: center;
 }
 
 .button-text{
@@ -72,9 +67,8 @@
     text-decoration: line-through;
 }
 
-.product__price-section{
-    /*background-color: aliceblue;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);*/
+.product__section--price{
+    background-color: aliceblue;
     box-sizing: border-box;
     border-radius: 10px;
     padding: 20px;
@@ -87,4 +81,36 @@
 
 .product__description-section{
     grid-column: span 2;
+}
+
+/* Стили для кнопок */
+.product__buttons-controls{
+    padding-top: 1rem;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product__button{
+    width: 50px;
+    height: 50px;
+    background-color: green;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: filter 0.8s 0.2s;
+    cursor: pointer;
+    border: none;
+}
+
+.product__button:hover{
+    filter: brightness(110%);
+}
+
+.product__button__icon{
+    object-fit: contain;
+    width: 60%;
+    height: 60%;
 }

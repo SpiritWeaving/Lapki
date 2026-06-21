@@ -46,9 +46,19 @@ const productCreateSchema = yup.object().shape({
     animal_size: yup.string().required("Выберите размер животного!")
 });
 
+const fetchProductData = async(id) => {
+    const response = axios.get(`http://127.0.0.1:8000/api/products/${id}`);
+    if (response.ok){
+        return response.data;
+    }
+}
+
 export default function ProductCreate() {
     // Определяем есть ли параметр id в маршруте
     const { id } = useParams(); // Извлекаем id из URL
+    if (id){
+
+    }
     const [message, setMessage] = useState('');
     // Инициализируем Formik
     const formik = useFormik({

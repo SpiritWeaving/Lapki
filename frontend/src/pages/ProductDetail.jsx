@@ -57,13 +57,13 @@ function ProductDetail(){
         return <div className="product">Загрузка...</div>;
     }
     return (
-        <main className="product">
-            <section className = "product__img-section product__section">
+        <div className="product">
+            <section className = "product__section--img product__section">
                 <img src={product.thumbnail}
                 className="product__img"
                 alt="Изображение товара"/>
             </section>
-            <section className = "product__table-section product__section"
+            <section className = "product__section-table product__section"
                 style={{paddingTop: "20px"}}>
                     <h3>Информация о товаре:</h3>
                     <GridRow label="В наличии" value={product.in_stock ? "Да" : "Нет"} />
@@ -73,12 +73,12 @@ function ProductDetail(){
                     <GridRow label="Категория" value={product.category_title} />
                     <GridRow label="Размер животного" value={product.animal_size_name} />
             </section>
-            <section className = "product__price-section product__section">
+            <section className = "product__section--price product__section">
                 <h2 className = "product__title">{product.title}</h2>
                 <h3 className = "product__price">
-                    Цена: 
+                    Цена:
                     <span className="product-card__price--current"
-                    style = {!product.in_stock ? {color: '#ad0505'} : {}}>
+                    style = {!product.in_stock ? {color: '#ad0505', paddingLeft: "8px"} : {paddingLeft: "8px"}}>
                         {product.final_price} Р
                     </span>
                     <span className="product-card__price--old"
@@ -86,21 +86,25 @@ function ProductDetail(){
                         {product.price} Р
                     </span>
                 </h3>
-                <div className="button-controls">
+                <div className="product__date_container">
+                    <GridRow label="Дата создания" value={product.created_at} />
+                    <GridRow label="Обновлено" value={product.updated_at} />
+                </div>
+                <div className="product__buttons-controls">
                     <AddToTheCart product={product} />
                     {currentUser.id == product.user &&
                     <button type="button"
-                    className="product__delete-button"
+                    className="product__button product__button--delete"
                     onClick={() => handleDelete()}
                     >
-                        <img src={deleteIcon} />
+                        <img src={deleteIcon} className="product__button__icon"/>
                     </button>
                     }
                     {currentUser.id == product.user &&
                     <a href={`/products/${product.id}/update`}
-                    className="product__delete-button"
+                    className="product__button product__button--delete"
                     >
-                        <img src={editIcon} />
+                        <img src={editIcon} className="product__button__icon"/>
                     </a>
                     }
                 </div>
@@ -112,7 +116,7 @@ function ProductDetail(){
                     {product.description}
                 </p>
             </section>
-        </main>
+        </div>
     );
 }
 

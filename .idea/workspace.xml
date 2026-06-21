@@ -5,69 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="86227d28-c52e-48a6-b49f-6f5d5ba33388" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/GridRow.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/Loader.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/Loader.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/PrivateRoute.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/PublicRoute.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/delete_modal/DeleteModal.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/delete_modal/DeleteModal.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/context/AuthContext.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/ProductCreate.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/ProductCreate.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/Profile.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/Register.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/Register.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/services/authService.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Zverolapki/Zverolapki/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Zverolapki/Zverolapki/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Zverolapki/catalogue/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Zverolapki/catalogue/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Zverolapki/catalogue/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Zverolapki/catalogue/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Zverolapki/catalogue/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Zverolapki/catalogue/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Zverolapki/catalogue/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Zverolapki/catalogue/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Zverolapki/catalogue/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Zverolapki/catalogue/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Zverolapki/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/Zverolapki/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Zverolapki/media/202503bec-202411dwarf-hamster-eating-in-bowl-1024x683.avif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Zverolapki/media/products/fishki_artem.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Zverolapki/media/products/navigation-rodentia.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Zverolapki/media/шиншилла.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/assets/svg/heart.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/assets/svg/heart_fill.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/assets/svg/heart_stroke.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/AddToTheCart.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/AddToTheCart.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Banner.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/banner/Banner.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Banner.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/banner/Banner.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/CartItem.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CartItem.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/CartItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CartItem.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/CategoryCard.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/category_card/CategoryCard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/CategoryCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/category_card/CategoryCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/CheckBoxCustom.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CheckBoxCustom.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/CheckBoxCustom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CheckBoxCustom.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Footer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Login.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Login.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProductCard.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProductCard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ProductCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ProductCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Register.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/About.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Cart.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Cart.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Cart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Cart.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Filters.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/delete_modal/DeleteModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/delete_modal/DeleteModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/ProductCreate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/ProductCreate.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/ProductDetail.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/ProductDetail.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/ProductDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/ProductDetail.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Products.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Products.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Products.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Products.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Wishlist.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/variables.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/variables.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
