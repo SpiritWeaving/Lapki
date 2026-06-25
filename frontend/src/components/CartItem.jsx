@@ -1,7 +1,10 @@
 import './CartItem.css'
+import React, { useState, useEffect } from 'react';
 import api from '../services/api'
+import deleteIcon from '../assets/svg/delete-icon-black.svg'
 
 function CartItem({cartItem}){
+    const[error, setError] = useState('');
     const updateQuantity = async(delta) => {
         const newQuantity = cartItem.quantity + delta;
         if(newQuantity <= 0){
@@ -31,27 +34,38 @@ function CartItem({cartItem}){
         <div className="cart_item">
             <img src={cartItem.product_detail.thumbnail}
             alt="Изображение товара"
-            className="cart_item-img"/>
+            className="cart_item__img"/>
 
-            <div className="cart_item-content">
-                <p className="cart_item-title">{cartItem.product_detail.title}</p>
-                <span className="cart_item-price">{cartItem.total_price} Р</span>
-                <div className="cart_item-buttons">
-                    <button className="cart_item-plus-button
-                    cart_item-button">
-                        <svg width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" strokeWidth="2"
-                        strokeLinecap="round" strokeLinejoin="round"
-                        className="cart_item-plus-icon"
-                        onClick={() => updateQuantity(1)}>
-                            <path d="M5 12h14M12 5v14"/>
-                        </svg>
-                    </button>
-                    <span>{cartItem.quantity}</span>
-                    <button className="cart_item-minus-button
-                    cart_item-button"
-                    onClick={() => updateQuantity(-1)}>
-                    &mdash;
+            <div className="cart_item__content">
+                <div className="cart_item__title_container">
+                    <p className="cart_item__title">
+                        {cartItem.product_detail.title}
+                    </p>
+                    <p className="cart_item__description">
+                        {cartItem.product_detail.description}
+                    </p>
+                </div>
+                <div className="cart_item__buttons">
+                    <div className="cart_item__quantity_container">
+                        <span className="cart_item__quantity">{cartItem.quantity}</span>
+                        <div className="cart_item__buttons_container">
+                            <button className="cart_item__button
+                            cart_item-button" onClick={() => updateQuantity(1)}>
+                               &#9650;
+                            </button>
+                            <button className="cart_item__button
+                            cart_item-button"
+                            onClick={() => updateQuantity(-1)}>
+                            &#9660;
+                            </button>
+                        </div>
+                    </div>
+                    <span className="cart_item__price">
+                        {cartItem.total_price} Р
+                    </span>
+                    <button className="cart_item__button">
+                        <img src={deleteIcon}
+                        className="cart_item__button__icon" style={{color: "#000"}}/>
                     </button>
                 </div>
             </div>

@@ -1,122 +1,44 @@
 // src/components/Profile.jsx
 import './Profile.css';
 import React, { useState, useEffect, useRef } from 'react';
-import empty_image from '../assets/images/empty.png';
 import api from '../services/api';
 import authService from '../services/authService';
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
+// GET /auth/profile
+const fetchUserProfile = async() => {
+    const response = await api.get("/auth/profile");
+    return response.data;
+}
+// PATCH /auth/profile
+const updateUserProfile = async(formData) => {
+    const response = await api.patch("/auth/profile/", formData);
+    return response.data;
+}
 export default function Profile() {
-    const [formData, setFormData] = useState({
-        first_name: '',
-        last_name: '',
-        email: '',
-        birth_date: '',
+    const queryClient = useQueryClient();
+    // Загружаем данные пользователя
+    const {data: userData, isLoading} = useQuery({
+        queryKey: ['userData'],
+        queryFn: fetchUserProfile,
+        // Настройки автоматического обновления:
+        refetchInterval: 10000, // Обновлять данные каждые 10 секунд
+        refetchIntervalInBackground: false, // Не обновлять, если вкладка свернута (экономит трафик)
+        staleTime: 5000, // Данные считаются свежими 5 секунд (в это время фоновые запросы не запускаются)
+        retry: 2,
     });
-    const [avatar, setAvatar] = useState(empty_image);
-    const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
-    const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-    const fileInputRef = useRef(null);
-
-    const {login, isAuthenticated, user, logout} = useAuth();
-    const navigate = useNavigate();
-    // Загрузка профиля при старте
-    useEffect(() => {
-        if (!isAuthenticated) {
-            navigate('/login');
-            return;
-        }
-        if (user) {
-            // Заполняем форму данными из контекста
-            setFormData({
-                first_name: user.first_name || '',
-                last_name: user.last_name || '',
-                email: user.email || '',
-                birth_date: user.birth_date || '',
-            });
-            if (user.avatar) {
-                setAvatar(user.avatar);
-            }
-            setLoading(false);
-        } else {
-            // Если user почему-то нет в контексте, загружаем отдельно
-            loadProfile();
-        }
-    }, [user, isAuthenticated, avatar]);
-
-    const loadProfile = async () => {
-        setLoading(true);
-        setError('');
-        try {
-            const response = await api.get('/auth/profile/');
-            setFormData({
-                first_name: response.data.first_name || '',
-                last_name: response.data.last_name || '',
-                email: response.data.email || '',
-                birth_date: response.data.birth_date || '',
-            });
-            console.log(response.data.avatar);
-            if (response.data.avatar) {
-                setAvatar(response.data.avatar);
-            }
-        } catch (err) {
-            console.error('Ошибка загрузки профиля:', err);
-            if (err.response?.status === 401) {
-                setError('Сессия истекла. Перенаправление на страницу входа...');
-                setTimeout(() => {
-                    authService.logout();
-                    navigate('/login');
-                }, 2000);
-            } else {
-                setError('Не удалось загрузить профиль. Пожалуйста, обновите страницу.');
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-        if (error) setError('');
-        if (successMessage) setSuccessMessage('');
-    };
-
- const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setSuccessMessage('');
-        setSaving(true);
-
-        try {
-            const response = await api.patch('/auth/profile/', {
-                first_name: formData.first_name,
-                last_name: formData.last_name,
-                email: formData.email,
-                birth_date: formData.birth_date
-            });
+    // Создаем мутацию для отправки изменений
+    const { mutate, isPending } = useMutation({
+        mutationFn: updateUserProfile,
+        onSuccess: (data) => {
             setSuccessMessage('Профиль успешно обновлен!');
-            // Обновляем данные в localStorage вручную
-            if (response.data) {
-                //const currentUser = authService.getCurrentUser();
-                const currentUser = user;
-                if (currentUser) {
-                    const updatedUser = {
-                        ...currentUser,
-                        first_name: formData.first_name,
-                        last_name: formData.last_name,
-                        email: formData.email,
-                        birth_date: formData.birth_date
-                    };
-                    localStorage.setItem('user', JSON.stringify(updatedUser));
-                }
-            }
-
+            // Инвалидируем кэш, чтобы перезагрузить данные
+            queryClient.invalidateQueries({ queryKey: ['userData'] });
             setTimeout(() => setSuccessMessage(''), 3000);
-        } catch (err) {
+        },
+        onError: (err) => {
             console.error('Ошибка сохранения:', err);
             if (err.response?.status === 401) {
                 setError('Сессия истекла. Пожалуйста, войдите снова.');
@@ -131,11 +53,59 @@ export default function Profile() {
             } else {
                 setError('Не удалось сохранить изменения. Проверьте соединение.');
             }
-        } finally {
-            setSaving(false);
-        }
-    };
+            setTimeout(() => setError(''), 3000);
+        },
+    });
+    const [formData, setFormData] = useState({
+        username: '',
+        first_name: '',
+        last_name: '',
+        email: '',
+        birth_date: ''
+    });
+    // State для улучшения UX
+    const [avatar, setAvatar] = useState(null);
+    const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const fileInputRef = useRef(null);
 
+    const {login, isAuthenticated, user, logout} = useAuth();
+    const navigate = useNavigate();
+    // Загрузка профиля при старте
+    useEffect(() => {
+        if(!isAuthenticated){
+            navigate("/login", {replace: true});
+            return;
+        }
+        if(userData){
+            setFormData({
+                username: userData.username || '',
+                first_name: userData.first_name || '',
+                last_name: userData.last_name || '',
+                email: userData.email || '',
+                birth_date: userData.birth_date || '',
+            });
+            if(userData.avatar){
+                setAvatar(userData.avatar);
+            }
+        }
+    }, [isAuthenticated, userData]);
+    // Обработчик submit
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setSuccessMessage('');
+        mutate(formData);
+    };
+    // Обработчик события change
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    }
+    //Обработка загрузки аватара
     const handleAvatarChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -152,17 +122,16 @@ export default function Profile() {
         setAvatar(URL.createObjectURL(file));
         setError('');
         setSuccessMessage('');
-
-        const data = new FormData();
-        data.append('avatar', file);
-
-        api.patch('/auth/profile/', data, {
+        const formData = new FormData();
+        formData.append('avatar', file);
+        api.patch('/auth/profile/', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         })
         .then(res => {
             setSuccessMessage('Аватар успешно обновлен!');
+            queryClient.invalidateQueries({ queryKey: ['userData'] });
             setTimeout(() => setSuccessMessage(''), 3000);
             if (res.data.avatar) {
                 setAvatar(res.data.user.avatar);
@@ -178,16 +147,15 @@ export default function Profile() {
         })
         .catch(err => {
             setError('Не удалось сохранить аватар');
-            loadProfile(); // Возвращаем старый аватар
         });
     };
-
+    // Удаление аватара
     const handleAvatarDelete = async () => {
         try {
-            await api.delete('/auth/profile/avatar/');
+            await api.patch('/auth/profile/', {avatar: null});
             setAvatar('');
+            queryClient.invalidateQueries({ queryKey: ['userData'] });
             setSuccessMessage('Аватар успешно удален');
-
             // Обновляем localStorage - удаляем аватар
             const currentUser = authService.getCurrentUser();
             if (currentUser) {
@@ -197,170 +165,146 @@ export default function Profile() {
                 };
                 localStorage.setItem('user', JSON.stringify(updatedUser));
             }
-
             setTimeout(() => setSuccessMessage(''), 3000);
         } catch (err) {
-            console.error('Ошибка удаления:', err);
             setError('Не удалось удалить аватар');
         }
     };
-
+    // Обработчик logout
     const handleLogout = () => {
         authService.logout();
-        window.location.href = '/login';
+        navigate('/login');
     };
-
-    if (loading) {
+    if (isLoading) {
         return (
             <div style={{ padding: '20px', textAlign: 'center' }}>
                 <p>Загрузка профиля...</p>
             </div>
         );
     }
-
     return (
         <main className="content">
             <h2 className="content__title">Основная информация</h2>
-
             {/* Сообщения об ошибках и успехе */}
             {error && (
-                <div className="error-message" style={{
-                    color: '#f44336',
-                    marginBottom: '20px',
-                    padding: '10px',
-                    backgroundColor: '#ffebee',
-                    borderRadius: '4px',
-                    borderLeft: '4px solid #f44336'
-                }}>
+                <div className="error-message">
                     <strong>Ошибка:</strong> {error}
                 </div>
             )}
-
             {successMessage && (
-                <div className="success-message" style={{
-                    color: '#4caf50',
-                    marginBottom: '20px',
-                    padding: '10px',
-                    backgroundColor: '#e8f5e9',
-                    borderRadius: '4px',
-                    borderLeft: '4px solid #4caf50'
-                }}>
+                <div className="success-message">
                     <strong>Успех!</strong> {successMessage}
                 </div>
             )}
-
             <h3 className="content__title">Аватар</h3>
             <section className="avatar__section">
                 <img
                     className="avatar__img"
-                    src={`http://127.0.0.1:8000/${avatar}`}
+                    src={avatar}
                     alt="Аватар пользователя"
                 />
                 <button
                     type="button"
                     className="button button-avatar-new button-avatar"
                     onClick={() => fileInputRef.current.click()}
-                    disabled={saving}
+                    disabled={isPending}
                 >
                     Загрузить новый аватар
                 </button>
-
                 <button
                     type="button"
                     className="button button-avatar-delete button-avatar"
                     onClick={handleAvatarDelete}
-                    disabled={saving}
+                    disabled={isPending}
                 >
                     Удалить аватар
                 </button>
-
                 <input
                     type="file"
                     ref={fileInputRef}
                     onChange={handleAvatarChange}
                     style={{ display: 'none' }}
                     accept="image/*"
-                    disabled={saving}
+                    disabled={isPending}
                 />
             </section>
-
             <section className="personal-details">
                 <h3 className="content__title">Персональные данные</h3>
-
-                <form className="form form__personal-details" onSubmit={handleSubmit}>
+                <form className="form form__personal-details"
+                    onSubmit={handleSubmit}>
+                    <label htmlFor="username" className="label">
+                        <span className="form__span">Username</span>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            value={formData.username}
+                            onChange={handleChange}
+                            className="form__input form__input_type_profile"
+                            required
+                            disabled={isPending}
+                            placeholder="username"
+                        />
+                    </label>
                     <label htmlFor="name" className="label">
-                        <span className="form__label">Имя</span>
+                        <span className="form__span">Имя</span>
                         <input
                             type="text"
                             id="name"
                             name="first_name"
                             value={formData.first_name}
                             onChange={handleChange}
-                            className="input input__text-field"
-                            required
-                            disabled={saving}
+                            className="form__input form__input_type_profile"
+                            disabled={isPending}
                             placeholder="Введите ваше имя"
                         />
                     </label>
-
                     <label htmlFor="surname" className="label">
-                        <span className="form__label">Фамилия</span>
+                        <span className="form__span">Фамилия</span>
                         <input
                             type="text"
                             id="surname"
                             name="last_name"
                             value={formData.last_name}
                             onChange={handleChange}
-                            className="input input__text-field"
-                            required
-                            disabled={saving}
+                            className="form__input form__input_type_profile"
+                            disabled={isPending}
                             placeholder="Введите вашу фамилию"
                         />
                     </label>
-
                     <label htmlFor="email" className="label">
-                        <span className="form__label">Электронная почта</span>
+                        <span className="form__span">Электронная почта</span>
                         <input
-                            type="email"
-                            id="email"
+                            type="email" id="email"
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="me@example.com"
-                            className="input input__text-field"
-                            required
-                            disabled={saving}
+                            className="form__input form__input_type_profile"
+                            required disabled={isPending}
                         />
                     </label>
-
                     <label htmlFor="birthdate" className="label">
-                        <span className="form__label">Дата рождения</span>
+                        <span className="form__span">Дата рождения</span>
                         <input
-                            type="date"
-                            id="birthdate"
+                            type="date" id="birthdate"
                             name="birth_date"
                             value={formData.birth_date}
                             onChange={handleChange}
-                            className="input input__text-field"
-                            required
-                            disabled={saving}
+                            className="form__input form__input_type_profile"
+                            disabled={isPending}
                         />
                     </label>
-
                     <button
                         type="submit"
-                        disabled={saving}
-                        className="button button__save-changes"
+                        disabled={isPending}
+                        className="button form__button"
                     >
-                        {saving ? 'Сохранение...' : 'Сохранить изменения'}
+                        {isPending ? 'Сохранение...' : 'Сохранить изменения'}
                     </button>
                 </form>
-
-                <button
-                    className="button button__save-changes"
-                    onClick={handleLogout}
-                    style={{ marginTop: "20px", backgroundColor: '#f44336' }}
-                >
+                <button className="button form__button"
+                    onClick={handleLogout}>
                     Выйти
                 </button>
             </section>

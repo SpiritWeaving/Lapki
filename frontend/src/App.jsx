@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import Products from './pages/Products'
 import Cart from './pages/Cart'
 import ProductDetail from './pages/ProductDetail'
+import Register from './pages/Register'
 import Login from './components/Login'
 import Profile from './pages/Profile'
 import ProductCreate from './pages/ProductCreate'
@@ -46,6 +47,9 @@ function App() {
                     } />
                     <Route path='/login' element = {
                         <Login />
+                    } />
+                    <Route path='/register' element = {
+                        <Register />
                     } />
                     <Route path='/profile' element = {
                         <PrivateRoute>

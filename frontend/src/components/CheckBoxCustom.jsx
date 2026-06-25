@@ -1,9 +1,9 @@
 import './CheckBoxCustom.css'
 
-function CheckBoxCustom({label, value, name, id, onChange}){
+function CheckBoxCustom({label, value, name, id, onChange, checked=false}){
     return (
         <label className="checkbox__square">
-            <input type="checkbox" name={name}
+            <input type="checkbox" name={name} checked={checked}
             value={label} id={id} className="visually-hidden" onChange={onChange}/>
             <span className="checkbox__square-span"></span>
             <span className="checkbox__square-label">{label}</span>

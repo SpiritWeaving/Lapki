@@ -29,16 +29,22 @@ function Cart() {
     }, []);
 
     return (
-        <div className="cart-container">
-            <h1 className="cart-container__title">Корзина</h1>
+        <div className="cart_container">
+            <h2 className="cart_container__link">
+                <a href="/products">
+                    &#10094; Продолжить покупки
+                </a>
+            </h2>
+            <h2 className="cart_container__title">Корзина</h2>
+            <p>В корзине {cart.total_quantity} товаров</p>
             {cartItems.length == 0 &&
-                <div className="cart-container__content">
+                <div className="cart_container__content">
                     <h3>В корзине пока пусто</h3>
                     <a href="/products">Перейти в каталог</a>
                 </div>
             }
             {cartItems.length > 0 &&
-            <div className="cart-container__content">
+            <div className="cart_container__content">
                 <ul className="cart_items__list">
                     { cartItems.map(cartItem => {
                         return <li className="cart_items__list-item">

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard.jsx'
 import CheckBoxCustom from '../components/CheckBoxCustom.jsx'
 import './Products.css'
+import Loader from '../components/Loader.jsx'
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 function Products(){
@@ -112,7 +114,7 @@ function Products(){
         p.title.toLowerCase().includes(search.toLowerCase()))
 
     // Обработка интерфейса во время загрузки или ошибки
-    if (loading) return <main><h2 style={{textAlign: 'center', marginTop: '50px'}}>Загрузка товаров...</h2></main>;
+    if (loading) return <div>Идет загрузка...</div>;
     if (error) return <main><h2 style={{textAlign: 'center', color: 'red', marginTop: '50px'}}>{error}</h2></main>;
     return (
         <main>

@@ -1,11 +1,16 @@
+.cart_container{
+    /*text-align: left;*/
+}
+
 .cart_items__list-item{
     list-style-type: none;
 }
 
-.cart-container__content{
+.cart_container__content{
     display: flex;
     gap: 40px;
     justify-content: center;
+    margin-top: 20px;
 }
 
 .cart_items__list{

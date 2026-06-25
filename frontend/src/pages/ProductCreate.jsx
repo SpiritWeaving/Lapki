@@ -46,34 +46,41 @@ const productCreateSchema = yup.object().shape({
     animal_size: yup.string().required("Выберите размер животного!")
 });
 
-const fetchProductData = async(id) => {
-    const response = axios.get(`http://127.0.0.1:8000/api/products/${id}`);
-    if (response.ok){
-        return response.data;
-    }
-}
-
 export default function ProductCreate() {
     // Определяем есть ли параметр id в маршруте
     const { id } = useParams(); // Извлекаем id из URL
-    if (id){
-
-    }
+    const [productData, setProductData] = useState(null);
+    // Загрузка данных товара если есть id
+    useEffect(() => {
+        if (id) {
+            const fetchProductData = async () => {
+                try {
+                    const response = await axios.get(`http://127.0.0.1:8000/api/products/${id}`);
+                    setProductData(response.data);
+                } catch (error) {
+                    console.error('Ошибка загрузки товара:', error);
+                    setMessage('Не удалось загрузить данные товара');
+                }
+            };
+            fetchProductData();
+        }
+    }, [id]);
     const [message, setMessage] = useState('');
     // Инициализируем Formik
     const formik = useFormik({
         initialValues: {
-            title: '',
-            description: '',
-            price: 0,
-            discount: 0,
-            in_stock: true,
+            title: productData?.title || '',
+            description: productData?.description || '',
+            price: productData?.price || 0,
+            discount: productData?.discount || 0,
+            in_stock: productData?.in_stock,
             thumbnail: null,
-            category: '',
-            animal: '',
-            animal_size: '',
-            box_type: '',
+            category: productData?.category || '',
+            animal: productData?.animal || '',
+            animal_size: productData?.animal_size || '',
+            box_type: productData?.box_type || '',
         },
+        enableReinitialize: true,
         validationSchema: productCreateSchema, // Подключаем схему Yup
         onSubmit: async(values) => {
             const response = await api.post("products/", values,{
@@ -87,7 +94,6 @@ export default function ProductCreate() {
             }
         }
     });
-
     // Загружаем опции для select
     const {isLoading, data, error} = useQuery({
         queryKey: ["createFormOptions"],
@@ -139,6 +145,7 @@ export default function ProductCreate() {
                     name="title"
                     onChange={formik.handleChange}
                     value={formik.values.title}
+                    onBlur={formik.handleBlur}
                     className="form__input form__input_type_text"
                     required
                     placeholder="Наименование"
@@ -153,6 +160,7 @@ export default function ProductCreate() {
                     name="description"
                     onChange={formik.handleChange}
                     value={formik.values.description}
+                    onBlur={formik.handleBlur}
                     className="form__textarea"
                     required
                     placeholder="Описание товара"
@@ -170,6 +178,7 @@ export default function ProductCreate() {
                     name="price"
                     onChange={formik.handleChange}
                     value={formik.values.price}
+                    onBlur={formik.handleBlur}
                     placeholder="Цена"
                     className="form__input form__input_type_number"
                     required min="0" step="0.01"
@@ -186,6 +195,7 @@ export default function ProductCreate() {
                     onChange={formik.handleChange}
                     placeholder="Скидка (%)"
                     value={formik.values.discount}
+                    onBlur={formik.handleBlur}
                     className="form__input form__input_type_number"
                     min="0" max="100"
                     noValidate
@@ -200,6 +210,7 @@ export default function ProductCreate() {
                     name="in_stock"
                     id="in_stock"
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                 />
             </div>
             {/* Блок загрузки изображения */}
@@ -213,6 +224,10 @@ export default function ProductCreate() {
                     className="form__input form__input_type-file"
                 />
                 <p className="form-error">{formik.errors.thumbnail}</p>
+                {productData && productData.thumbnail &&
+                    <img className = "form__input__uploaded_file"
+                    src={productData.thumbnail}
+                    alt="Загруженное изображение"/> }
             </label>
 
             {/* Поля с выпадающими списками */}
@@ -226,6 +241,7 @@ export default function ProductCreate() {
                         className="product__create__form-select"
                         onChange={formik.handleChange}
                         value={formik.values.animal_size}
+                        onBlur={formik.handleBlur}
                         required
                     >
                         <option value="">Выберите размер</option>
@@ -245,6 +261,7 @@ export default function ProductCreate() {
                         className="product__create__form-select"
                         onChange={formik.handleChange}
                         value={formik.values.box_type}
+                        onBlur={formik.handleBlur}
                         required
                     >
                         <option value="">Выберите тип</option>
@@ -264,6 +281,7 @@ export default function ProductCreate() {
                         className="product__create__form-select"
                         onChange={formik.handleChange}
                         value={formik.values.animal}
+                        onBlur={formik.handleBlur}
                         required
                     >
                         <option value="">Выберите вид</option>
@@ -282,6 +300,7 @@ export default function ProductCreate() {
                         id="category"
                         className="product__create__form-select"
                         onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         value={formik.values.category}
                         required
                     >
