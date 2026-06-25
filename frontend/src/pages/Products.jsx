@@ -41,7 +41,7 @@ function Products(){
                 setCategories(categoriesRes.data.results || categoriesRes.data);
                 setProducts(productsRes.data.results || productsRes.data);
                 // Вычисляем общее количество страниц (count / PAGE_SIZE)
-                setTotalPages(Math.ceil(productsRes.data.count / 9));
+                setTotalPages(Math.ceil(productsRes.data.count / 8));
             } catch (err) {
                 setError("Не удалось загрузить данные с сервера.");
             } finally {
@@ -105,11 +105,9 @@ function Products(){
     const handleNextPage = () => {
         if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
     };
-
     const handlePrevPage = () => {
         if (currentPage > 1) setCurrentPage(prev => prev - 1);
     };
-
     const filteredProducts = products.filter(p =>
         p.title.toLowerCase().includes(search.toLowerCase()))
 

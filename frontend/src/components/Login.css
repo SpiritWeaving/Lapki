@@ -1,10 +1,10 @@
 .error-message{
     color: '#f44336';
-    backgroundColor: '#ffebee';
+    background-color: '#ffebee';
     padding: '10px';
-    borderRadius: '4px';
-    marginBottom: '15px';
-    textAlign: 'center';
+    border-radius: '4px';
+    margin-bottom: '15px';
+    text-align: 'center';
 }
 
 .login__form{

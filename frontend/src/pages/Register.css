@@ -11,3 +11,12 @@
     gap: 20px;
     text-align: left;
 }
+
+.error-message{
+    color: '#f44336';
+    background-color: '#ffebee';
+    padding: '10px';
+    border-radius: '4px';
+    margin-bottom: '15px';
+    text-align: 'center';
+}

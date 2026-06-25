@@ -66,7 +66,6 @@ export const AuthProvider = ({ children }) => {
                 setUser(response.data.user);
                 return { success: true };
             }
-            console.log(user);
             return { success: false, error: 'Ошибка входа' };
         } catch (error) {
             return {

@@ -172,7 +172,7 @@ export default function Profile() {
     };
     // Обработчик logout
     const handleLogout = () => {
-        authService.logout();
+        logout();
         navigate('/login');
     };
     if (isLoading) {
