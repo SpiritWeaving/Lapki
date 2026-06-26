@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard.jsx'
 import CheckBoxCustom from '../components/CheckBoxCustom.jsx'
 import './Products.css'
-import Loader from '../components/Loader.jsx'
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -11,6 +10,7 @@ function Products(){
     const [products, setProducts] = useState([]);
     const [animals, setAnimals] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [ordering, setOrdering] = useState('-created_at'); // состояние для сортировки
 
     // Стейты для выбранных фильтров (массивы значений)
     const [selectedAnimals, setSelectedAnimals] = useState([]);
@@ -63,7 +63,7 @@ function Products(){
                     categories: selectedCategories
                 };
                 const response = await fetch(
-                    'http://127.0.0.1:8000/api/products/filters/',
+                    `http://127.0.0.1:8000/api/products/filters/`,
                 {
                     method: 'post',
                     headers: {
@@ -101,15 +101,20 @@ function Products(){
         );
     };
 
-    // Обработчики кнопок
+    // Обработчики кнопок пагинации
     const handleNextPage = () => {
         if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
     };
     const handlePrevPage = () => {
         if (currentPage > 1) setCurrentPage(prev => prev - 1);
     };
+    // Поиск по названию на клиенте
     const filteredProducts = products.filter(p =>
         p.title.toLowerCase().includes(search.toLowerCase()))
+    //Обработка выбора значения select
+    const handleOrderingChange = (event) => {
+        setOrdering(event.target.value);
+    }
 
     // Обработка интерфейса во время загрузки или ошибки
     if (loading) return <div>Идет загрузка...</div>;
@@ -119,8 +124,8 @@ function Products(){
             <h1 className="content__title" style={{marginTop: 0}}>Наши товары</h1>
             <section className="search-sorting-section">
                 <form className="sorting-form">
-                    <label htmlFor="sorting-select">Сортировать по:</label>
-                    <select name="sort" id="sorting-select" className="sorting-form__select">
+                    <label htmlFor="ordering">Сортировать по:</label>
+                    <select name="ordering" id="ordering" className="sorting-form__select">
                         <option value="">Не сортировать</option>
                         <option value="-created_at">Новинки</option>
                         <option value="price">Дешевле</option>

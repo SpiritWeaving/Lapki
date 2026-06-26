@@ -89,14 +89,6 @@
     gap: 20px;
 }
 
-.button__save-changes{
-    padding-block: 13px;
-    background-color: #4F6F50;
-    color: #fff;
-    border-radius: 10px;
-    border: 0;
-}
-
 .form__button--logout{
     margin-top: 20px;
 }

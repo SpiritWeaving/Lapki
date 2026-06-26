@@ -66,10 +66,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset()
         categories = request.data.get('categories', [])
         animals = request.data.get('animals', [])
-        # if categories:
-        #     queryset = queryset.filter(category__title__in=categories)
-        # if animals:
-        #     queryset = queryset.filter(animal__title__in=animals)
         queryset = queryset.filter(Q(category__title__in=categories) | Q(animal__title__in=animals))
         serializer=self.get_serializer(queryset, many=True)
         return Response(serializer.data)

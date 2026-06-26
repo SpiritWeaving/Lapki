@@ -1,5 +1,6 @@
 import {BrowserRouter, Routes, Route, Link} from 'react-router-dom'
 import {AuthProvider} from './context/AuthContext.jsx'
+import {CartProvider} from './context/CartContext.jsx'
 import PrivateRoute from './components/PrivateRoute'
 
 import Header from './components/Header'
@@ -25,51 +26,53 @@ function App() {
   return (
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-                {/* Шапка видна всегда */}
-                <AuthProvider>
-                <Header />
-                {/*Контент меняется при переходе. Список путей, которые при переходе будут обновляться*/}
-                <main style={{padding: '1rem'}}>
-                <Routes>
-                    <Route path='/' element = {
-                        <Home />
-                    } />
-                    <Route path='/products' element = {
-                        <Products />
-                    } />
-                    <Route path='/products/:id' element = {
-                        <ProductDetail />
-                    } />
-                    <Route path='/products/:id/update' element = {
-                        <PrivateRoute>
-                            <ProductCreate />
-                        </PrivateRoute>
-                    } />
-                    <Route path='/login' element = {
-                        <Login />
-                    } />
-                    <Route path='/register' element = {
-                        <Register />
-                    } />
-                    <Route path='/profile' element = {
-                        <PrivateRoute>
-                            <Profile />
-                        </PrivateRoute>
-                    } />
-                    <Route path='/cart' element = {
-                        <PrivateRoute>
-                            <Cart />
-                        </PrivateRoute>
-                    } />
-                    <Route path='/create_product' element = {
-                        <PrivateRoute>
-                            <ProductCreate />
-                        </PrivateRoute>
-                    } />
-                </Routes>
-                </main>
-                <Footer />
-                </AuthProvider>
+            {/* Шапка видна всегда */}
+            <AuthProvider>
+                <CartProvider>
+                    <Header />
+                    {/*Контент меняется при переходе. Список путей, которые при переходе будут обновляться*/}
+                    <main style={{padding: '1rem'}}>
+                    <Routes>
+                        <Route path='/' element = {
+                            <Home />
+                        } />
+                        <Route path='/products' element = {
+                            <Products />
+                        } />
+                        <Route path='/cart' element = {
+                            <PrivateRoute>
+                                <Cart />
+                            </PrivateRoute>
+                        } />
+                        <Route path='/products/:id' element = {
+                            <ProductDetail />
+                        } />
+                        <Route path='/products/:id/update' element = {
+                            <PrivateRoute>
+                                <ProductCreate />
+                            </PrivateRoute>
+                        } />
+                        <Route path='/login' element = {
+                            <Login />
+                        } />
+                        <Route path='/register' element = {
+                            <Register />
+                        } />
+                        <Route path='/profile' element = {
+                            <PrivateRoute>
+                                <Profile />
+                            </PrivateRoute>
+                        } />
+                        <Route path='/create_product' element = {
+                            <PrivateRoute>
+                                <ProductCreate />
+                            </PrivateRoute>
+                        } />
+                    </Routes>
+                    </main>
+                    <Footer />
+                </CartProvider>
+            </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
   )
