@@ -58,15 +58,15 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',  # Временно разрешаем всем
     ],
 
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle',
-    ],
+    # 'DEFAULT_THROTTLE_CLASSES': [
+    #     'rest_framework.throttling.AnonRateThrottle',
+    #     'rest_framework.throttling.UserRateThrottle',
+    # ],
 
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',   # 100 запросов в день для анонимов
-        'user': '10000/day',  # 1000 запросов в день для авторизованных
-    },
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon': '100/day',   # 100 запросов в день для анонимов
+    #     'user': '1000/day',  # 1000 запросов в день для авторизованных
+    # },
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 9,  # По 9 товаров на страницу

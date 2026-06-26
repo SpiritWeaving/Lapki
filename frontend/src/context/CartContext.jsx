@@ -14,7 +14,7 @@ const CartContext = createContext();
 
 //Создаем провайдер для обертки приложения
 export const CartProvider = ({ children }) => {
-    const {cartData, isLoading, error} = useQuery({
+    const {data: cartData, isLoading, error} = useQuery({
         queryKey: ["cartData"],
         queryFn: fetchCartData
     });

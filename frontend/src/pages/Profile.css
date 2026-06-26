@@ -96,3 +96,7 @@
     border-radius: 10px;
     border: 0;
 }
+
+.form__button--logout{
+    margin-top: 20px;
+}

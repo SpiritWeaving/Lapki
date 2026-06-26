@@ -204,14 +204,15 @@ export default function ProductCreate() {
             </label>
             {/* Чекбокс "В наличии" */}
             <div style={{ width: "100%" }}>
-                <CheckBoxCustom
-                    label="В наличии"
+                <label>"В наличии"
+                <input type="checkbox"
                     checked={formik.values.in_stock}
                     name="in_stock"
                     id="in_stock"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                 />
+                </label>
             </div>
             {/* Блок загрузки изображения */}
             <label className="form__label">

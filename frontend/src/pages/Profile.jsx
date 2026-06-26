@@ -303,7 +303,7 @@ export default function Profile() {
                         {isPending ? 'Сохранение...' : 'Сохранить изменения'}
                     </button>
                 </form>
-                <button className="button form__button"
+                <button className="button form__button form__button--logout"
                     onClick={handleLogout}>
                     Выйти
                 </button>

@@ -10,6 +10,7 @@ from .serializers import *
 from .permissions import *
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
+from django.db.models import Q
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class CategoryListView(generics.ListAPIView):
@@ -65,10 +66,11 @@ class ProductViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset()
         categories = request.data.get('categories', [])
         animals = request.data.get('animals', [])
-        if categories:
-            queryset = queryset.filter(category__title__in=categories)
-        if animals:
-            queryset = queryset.filter(animal__title__in=animals)
+        # if categories:
+        #     queryset = queryset.filter(category__title__in=categories)
+        # if animals:
+        #     queryset = queryset.filter(animal__title__in=animals)
+        queryset = queryset.filter(Q(category__title__in=categories) | Q(animal__title__in=animals))
         serializer=self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
