@@ -1,0 +1,140 @@
+@startuml
+title ER-диаграмма\nИнтернет-магазин зоотоваров «Лапки»
+
+' ============================================
+' === ТАБЛИЦЫ ===
+' ============================================
+
+entity "users" {
+  * id : BIGINT <<PK>>
+  --
+  * username : VARCHAR(150) <<UNIQUE>>
+  * email : VARCHAR(254) <<UNIQUE>>
+  * password : VARCHAR(255)
+  first_name : VARCHAR(150)
+  last_name : VARCHAR(150)
+  avatar : VARCHAR(255)
+  birth_date : DATE
+  created_at : TIMESTAMP
+  is_staff : BOOLEAN
+  is_active : BOOLEAN
+}
+
+entity "categories" {
+  * id : BIGINT <<PK>>
+  --
+  * title : VARCHAR(150) <<UNIQUE>>
+}
+
+entity "animals" {
+  * id : BIGINT <<PK>>
+  --
+  * title : VARCHAR(150)
+  description : TEXT
+  image : VARCHAR(255)
+}
+
+entity "products" {
+  * id : BIGINT <<PK>>
+  --
+  * title : VARCHAR(255)
+  * description : TEXT
+  * price : DECIMAL(10,2)
+  discount : INTEGER
+  in_stock : BOOLEAN
+  box_type : VARCHAR(30)
+  animal_size : VARCHAR(20)
+  thumbnail : VARCHAR(255)
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+  --
+  user_id : BIGINT <<FK>>
+  category_id : BIGINT <<FK>>
+  animal_id : BIGINT <<FK>>
+}
+
+entity "carts" {
+  * id : BIGINT <<PK>>
+  --
+  user_id : BIGINT <<FK, UNIQUE>>
+}
+
+entity "cart_items" {
+  * id : BIGINT <<PK>>
+  --
+  quantity : INTEGER
+  --
+  cart_id : BIGINT <<FK>>
+  product_id : BIGINT <<FK>>
+}
+
+entity "wishlists" {
+  * id : BIGINT <<PK>>
+  --
+  user_id : BIGINT <<FK, UNIQUE>>
+}
+
+entity "wishlist_items" {
+  * id : BIGINT <<PK>>
+  --
+  wishlist_id : BIGINT <<FK>>
+  product_id : BIGINT <<FK>>
+}
+
+entity "reviews" {
+  * id : BIGINT <<PK>>
+  --
+  rating : INTEGER
+  text : TEXT
+  created_at : TIMESTAMP
+  --
+  user_id : BIGINT <<FK>>
+  product_id : BIGINT <<FK>>
+}
+
+' ============================================
+' === СВЯЗИ ===
+' ============================================
+
+users ||--o{ products : "создаёт"
+users ||--|| carts : "имеет"
+users ||--|| wishlists : "имеет"
+users ||--o{ reviews : "пишет"
+
+categories ||--o{ products : "содержит"
+animals ||--o{ products : "предназначен"
+
+carts ||--o{ cart_items : "содержит"
+cart_items }o--|| products : "ссылается на"
+
+wishlists ||--o{ wishlist_items : "содержит"
+wishlist_items }o--|| products : "ссылается на"
+
+reviews }o--|| products : "относится к"
+
+' ============================================
+' === ПРИМЕЧАНИЯ ===
+' ============================================
+
+note right of products
+  Индексы:
+  - title (поиск)
+  - in_stock (фильтр)
+  - category_id (связь)
+  - animal_id (связь)
+  - created_at (сортировка)
+end note
+
+note right of reviews
+  Ограничения:
+  - rating CHECK (1-5)
+  - UNIQUE (user_id, product_id)
+end note
+
+note right of cart_items
+  Ограничения:
+  - quantity > 0
+  - UNIQUE (cart_id, product_id)
+end note
+
+@enduml

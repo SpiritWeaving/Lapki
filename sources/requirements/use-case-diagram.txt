@@ -1,0 +1,85 @@
+@startuml
+title Use Case диаграмма\nИнтернет-магазин зоотоваров «Лапки»
+
+left to right direction
+
+actor "Гость" as Guest
+actor "Авторизованный\nпользователь" as User
+actor "Администратор" as Admin
+
+Admin --|> User
+User --|> Guest
+
+package "Прецеденты гостя" {
+  usecase "Зарегистрироваться" as UC_Register
+  usecase "Войти" as UC_Login
+  usecase "Просмотреть каталог" as UC_ViewCatalog
+  usecase "Поиск" as UC_Search
+  usecase "Фильтрация" as UC_Filter
+  usecase "Просмотр карточки товара" as UC_ViewProduct
+  usecase "Просмотр отзывов" as UC_ViewReviews
+  usecase "Просмотр корзины" as UC_ViewCart
+}
+
+package "Прецеденты пользователя" {
+  usecase "Редактировать профиль" as UC_EditProfile
+  usecase "Добавить в корзину" as UC_AddToCart
+  usecase "Удалить из корзины" as UC_RemoveFromCart
+  usecase "Изменить количество" as UC_UpdateCart
+  usecase "Оформить заказ" as UC_Checkout
+  usecase "История заказов" as UC_OrderHistory
+  usecase "Добавить в избранное" as UC_AddToWishlist
+  usecase "Удалить из избранного" as UC_RemoveFromWishlist
+  usecase "Оставить отзыв" as UC_AddReview
+  usecase "Поставить рейтинг" as UC_AddRating
+  usecase "Выйти" as UC_Logout
+}
+
+package "Прецеденты администратора" {
+  usecase "Создать товар" as UC_CreateProduct
+  usecase "Редактировать товар" as UC_UpdateProduct
+  usecase "Удалить товар" as UC_DeleteProduct
+  usecase "Управлять категориями" as UC_ManageCategories
+  usecase "Управлять видами" as UC_ManageAnimals
+  usecase "Управлять пользователями" as UC_ManageUsers
+  usecase "Модерировать отзывы" as UC_ModerateReviews
+  usecase "Статистика" as UC_ViewStats
+}
+
+' Связи актёров с прецедентами
+Guest --> UC_Register
+Guest --> UC_Login
+Guest --> UC_ViewCatalog
+Guest --> UC_Search
+Guest --> UC_Filter
+Guest --> UC_ViewProduct
+Guest --> UC_ViewReviews
+Guest --> UC_ViewCart
+
+User --> UC_EditProfile
+User --> UC_AddToCart
+User --> UC_RemoveFromCart
+User --> UC_UpdateCart
+User --> UC_Checkout
+User --> UC_OrderHistory
+User --> UC_AddToWishlist
+User --> UC_RemoveFromWishlist
+User --> UC_AddReview
+User --> UC_AddRating
+User --> UC_Logout
+
+Admin --> UC_CreateProduct
+Admin --> UC_UpdateProduct
+Admin --> UC_DeleteProduct
+Admin --> UC_ManageCategories
+Admin --> UC_ManageAnimals
+Admin --> UC_ManageUsers
+Admin --> UC_ModerateReviews
+Admin --> UC_ViewStats
+
+' Отношения include/extend (вынесены в заметки для компактности)
+note right of UC_Checkout : <<include>>\nВход (если не авторизован)
+note right of UC_AddReview : <<include>>\nВход (только авторизованные)
+note right of UC_AddToWishlist : <<include>>\nВход (только авторизованные)
+
+@enduml

@@ -1,0 +1,60 @@
+@startuml
+title Диаграмма последовательности\nАутентификация и обновление JWT-токенов
+
+actor "Пользователь" as User
+participant "React SPA" as React
+participant "Axios Interceptor" as Axios
+participant "Django REST API" as DRF
+participant "TokenObtainPairView" as TokenView
+participant "TokenRefreshView" as RefreshView
+database "База данных" as DB
+
+' === СЦЕНАРИЙ 1: УСПЕШНЫЙ ВХОД ===
+group Успешный вход
+  User -> React : Вводит email/username и пароль
+  React -> Axios : POST /api/auth/login/
+  Axios -> DRF : Передача credentials
+  DRF -> TokenView : Обработка запроса
+  TokenView -> DB : SELECT user WHERE (email=? OR username=?)
+  DB --> TokenView : Данные пользователя
+  TokenView -> TokenView : Проверка пароля (check_password)
+  TokenView -> TokenView : Генерация access (30 min) + refresh (1 day)
+  TokenView --> DRF : {access, refresh}
+  DRF --> Axios : 200 OK с токенами
+  Axios -> Axios : Сохранение токенов в localStorage
+  Axios --> React : Передача токенов
+  React --> User : Перенаправление в главную
+end
+
+' === СЦЕНАРИЙ 2: ОБНОВЛЕНИЕ ИСТЁКШЕГО ACCESS-ТОКЕНА ===
+group Обновление истёкшего access-токена
+  User -> React : Запрос защищённых данных
+  React -> Axios : GET /api/products/my_products/
+  Axios -> Axios : Добавление заголовка\nAuthorization: Bearer <истёкший access>
+  Axios -> DRF : GET /api/products/my_products/
+  DRF -> DRF : Проверка JWT (просрочен)
+  DRF --> Axios : 401 Unauthorized
+  Axios -> Axios : Обнаружен 401\nБерёт refresh-токен из localStorage
+  Axios -> DRF : POST /api/auth/token/refresh/\n{refresh: token}
+  DRF -> RefreshView : Обработка запроса
+  RefreshView -> RefreshView : Валидация refresh-токена
+  alt Refresh токен валиден
+    RefreshView -> RefreshView : Генерация нового access токена
+    RefreshView --> DRF : {access}
+    DRF --> Axios : 200 OK (новый access)
+    Axios -> Axios : Обновление access токена в localStorage
+    Axios -> DRF : Повтор исходного запроса\nGET /api/products/my_products/\nс новым access
+    DRF -> DRF : Проверка нового access токена
+    DRF --> Axios : 200 OK с данными
+    Axios --> React : Данные курсов
+    React --> User : Отображение данных
+  else Refresh токен истёк
+    RefreshView --> DRF : 401 Unauthorized
+    DRF --> Axios : 401 Unauthorized
+    Axios -> Axios : Очистка токенов из localStorage
+    Axios -> React : Перенаправление на страницу входа
+    React --> User : Показать форму входа
+  end
+end
+
+@enduml

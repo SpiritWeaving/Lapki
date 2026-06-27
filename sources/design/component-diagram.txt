@@ -1,0 +1,67 @@
+@startuml
+title Компонентная диаграмма\nИнтернет-магазин зоотоваров «Лапки»
+
+left to right direction
+
+' === КЛИЕНТСКАЯ ЧАСТЬ (React SPA) ===
+package "Клиент (Frontend)" {
+  [React SPA] as React
+  [UI Компоненты] as UI
+  [React Router] as Router
+  [AuthContext] as Auth
+  [Axios API Client] as Axios
+  [CSS Modules] as CSS
+  
+  UI --> React
+  Router --> React
+  Auth --> React
+  Axios --> React
+  CSS --> UI
+}
+
+' === СЕРВЕРНАЯ ЧАСТЬ (Django REST) ===
+package "Сервер (Backend)" {
+  [Django REST API] as DRF
+  [JWT Auth] as JWT
+  [Permissions Layer] as Perm
+  [Serializers] as Serializers
+  [ViewSet (Product)] as ViewSet1
+  [ViewSet (Category)] as ViewSet2
+  [ViewSet (Cart)] as ViewSet3
+  [ViewSet (Wishlist)] as ViewSet4
+  [ViewSet (Review)] as ViewSet5
+  [ORM (Django)] as ORM
+  [PostgreSQL / SQLite] as DB
+  
+  ViewSet1 --> Serializers
+  ViewSet2 --> Serializers
+  ViewSet3 --> Serializers
+  ViewSet4 --> Serializers
+  ViewSet5 --> Serializers
+  Serializers --> ORM
+  ORM --> DB
+  Perm --> ViewSet1
+  Perm --> ViewSet2
+  Perm --> ViewSet3
+  Perm --> ViewSet4
+  Perm --> ViewSet5
+  JWT --> Perm
+}
+
+' === ВЗАИМОДЕЙСТВИЕ ===
+React <--> DRF : HTTP / REST API (JSON)
+Axios --> DRF : Запросы с JWT
+DRF --> React : Ответы (JSON)
+
+' === ДОПОЛНИТЕЛЬНО ===
+note right of React
+  Траектория Б:
+  React SPA без WebSocket
+end note
+
+note right of DRF
+  Django REST Framework
+  с Simple JWT
+end note
+
+@enduml

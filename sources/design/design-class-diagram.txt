@@ -1,0 +1,268 @@
+@startuml
+title Диаграмма классов проектирования\nИнтернет-магазин зоотоваров «Лапки»
+
+' ============================================
+' === FRONTEND (React SPA) ===
+' ============================================
+
+package "React SPA (Frontend)" {
+  
+  class "AuthContext" {
+    - user: Object
+    - accessToken: string
+    - refreshToken: string
+    + login(credentials): Promise
+    + logout(): void
+    + refreshToken(): Promise
+    + isAuthenticated(): boolean
+  }
+  
+  class "api.js (Axios)" {
+    + get(url, params): Promise
+    + post(url, data): Promise
+    + put(url, data): Promise
+    + delete(url): Promise
+    + setupInterceptors(): void
+  }
+  
+  class "ProductList" {
+    - products: Array
+    - loading: boolean
+    - filters: Object
+    + useEffect(): void
+    + render(): JSX
+    + handleFilter(): void
+  }
+  
+  class "ProductDetail" {
+    - product: Object
+    - reviews: Array
+    + useEffect(): void
+    + render(): JSX
+    + addToCart(): void
+    + addToWishlist(): void
+  }
+  
+  class "Cart" {
+    - items: Array
+    - total: number
+    + render(): JSX
+    + updateQuantity(): void
+    + removeItem(): void
+    + checkout(): void
+  }
+  
+  class "Wishlist" {
+    - items: Array
+    + render(): JSX
+    + removeItem(): void
+  }
+  
+  class "Login" {
+    - email: string
+    - password: string
+    + handleSubmit(): void
+    + render(): JSX
+  }
+  
+  class "Register" {
+    - formData: Object
+    + handleSubmit(): void
+    + handleChange(): void
+    + render(): JSX
+  }
+  
+  class "Profile" {
+    - userData: Object
+    + handleSubmit(): void
+    + render(): JSX
+  }
+  
+  class "ReviewForm" {
+    - rating: number
+    - text: string
+    + handleSubmit(): void
+    + render(): JSX
+  }
+  
+  api --> AuthContext : использует токены
+  ProductList --> api : вызывает
+  ProductDetail --> api : вызывает
+  Cart --> api : вызывает
+  Wishlist --> api : вызывает
+  Login --> AuthContext : использует
+  Register --> AuthContext : использует
+  Profile --> AuthContext : использует
+  ReviewForm --> api : вызывает
+}
+
+' ============================================
+' === BACKEND (Django REST Framework) ===
+' ============================================
+
+package "Django REST Framework (Backend)" {
+  
+  class "ProductViewSet" {
+    + list(): Response
+    + create(): Response
+    + retrieve(): Response
+    + update(): Response
+    + destroy(): Response
+    + my_products(): Response
+    + add_review(): Response
+  }
+  
+  class "CategoryViewSet" {
+    + list(): Response
+    + create(): Response
+    + retrieve(): Response
+    + update(): Response
+    + destroy(): Response
+  }
+  
+  class "CartViewSet" {
+    + list(): Response
+    + add_item(): Response
+    + remove_item(): Response
+    + update_quantity(): Response
+    + checkout(): Response
+  }
+  
+  class "WishlistViewSet" {
+    + list(): Response
+    + add_item(): Response
+    + remove_item(): Response
+  }
+  
+  class "ProductSerializer" {
+    + fields: list
+    + validate_price(): void
+    + to_representation(): dict
+  }
+  
+  class "CategorySerializer" {
+    + fields: list
+    + to_representation(): dict
+  }
+  
+  class "CartSerializer" {
+    + fields: list
+    + get_total(): decimal
+  }
+  
+  class "Product" {
+    - id: AutoField
+    - title: CharField
+    - description: TextField
+    - price: DecimalField
+    - discount: PositiveSmallIntegerField
+    - in_stock: BooleanField
+    - box_type: CharField
+    - animal_size: CharField
+    - thumbnail: ImageField
+    - created_at: DateTimeField
+    - updated_at: DateTimeField
+    + __str__(): str
+    + get_final_price(): decimal
+  }
+  
+  class "Category" {
+    - id: AutoField
+    - title: CharField
+    + __str__(): str
+  }
+  
+  class "Animal" {
+    - id: AutoField
+    - title: CharField
+    - description: TextField
+    - image: ImageField
+    + __str__(): str
+  }
+  
+  class "User" {
+    - id: AutoField
+    - username: CharField
+    - email: EmailField
+    - password: CharField
+    - avatar: ImageField
+    - birth_date: DateField
+    - created_at: DateTimeField
+    - is_staff: BooleanField
+    + __str__(): str
+    + get_avatar_url(): str
+  }
+  
+  class "Cart" {
+    - id: AutoField
+    - user: ForeignKey
+  }
+  
+  class "CartItem" {
+    - id: AutoField
+    - cart: ForeignKey
+    - product: ForeignKey
+    - quantity: PositiveIntegerField
+    + get_total_price(): decimal
+  }
+  
+  class "Wishlist" {
+    - id: AutoField
+    - user: ForeignKey
+  }
+  
+  class "WishlistItem" {
+    - id: AutoField
+    - wishlist: ForeignKey
+    - product: ForeignKey
+  }
+  
+  class "Review" {
+    - id: AutoField
+    - user: ForeignKey
+    - product: ForeignKey
+    - rating: IntegerField
+    - text: TextField
+    - created_at: DateTimeField
+  }
+  
+  ' Связи между классами Backend
+  ProductViewSet --> ProductSerializer : использует
+  ProductViewSet --> Product : управляет
+  CategoryViewSet --> CategorySerializer : использует
+  CategoryViewSet --> Category : управляет
+  CartViewSet --> CartSerializer : использует
+  CartViewSet --> Cart : управляет
+  WishlistViewSet --> Wishlist : управляет
+  
+  Product --> Category : belongs to
+  Product --> Animal : belongs to
+  Product --> User : created by
+  Cart --> User : belongs to
+  CartItem --> Cart : belongs to
+  CartItem --> Product : references
+  Wishlist --> User : belongs to
+  WishlistItem --> Wishlist : belongs to
+  WishlistItem --> Product : references
+  Review --> User : written by
+  Review --> Product : references
+}
+
+' ============================================
+' === ВЗАИМОДЕЙСТВИЕ FRONTEND <-> BACKEND ===
+' ============================================
+
+api --> ProductViewSet : HTTP запросы
+api --> CategoryViewSet : HTTP запросы
+api --> CartViewSet : HTTP запросы
+api --> WishlistViewSet : HTTP запросы
+
+note right of ProductViewSet
+  JWT-аутентификация
+  Permissions:
+  - IsAuthenticatedOrReadOnly
+  - IsAdminOrReadOnly
+  - IsAuthorOrReadOnly
+end note
+
+@enduml

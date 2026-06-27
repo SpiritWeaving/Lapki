@@ -1,0 +1,54 @@
+@startuml
+!define RECTANGLE class
+
+title IDEF0 - Контекстная диаграмма A-0\nИнтернет-магазин зоотоваров «Лапки»
+
+' Границы системы
+rectangle "Система\nИнтернет-магазин\n«Лапки»" as System #LightBlue
+
+' Входы (стрелки слева)
+rectangle "Запросы пользователей\n(просмотр, поиск, фильтрация,\nдобавление в корзину)" as Input1 #LightGreen
+rectangle "Данные о товарах\nи заказах от администратора" as Input2 #LightGreen
+rectangle "Внешние данные\n(платежи, доставка)" as Input3 #LightGreen
+
+' Управление (стрелки сверху)
+rectangle "Требования законодательства\n(ФЗ «О защите прав потребителей»)" as Control1 #Yellow
+rectangle "Политика безопасности данных\n(152-ФЗ, GDPR)" as Control2 #Yellow
+rectangle "Техническое задание\nна разработку" as Control3 #Yellow
+
+' Механизмы (стрелки снизу)
+rectangle "Команда разработки\nи поддержки" as Mech1 #Orange
+rectangle "Администратор\nмагазина" as Mech2 #Orange
+rectangle "CRM-система\nи платёжные сервисы" as Mech3 #Orange
+
+' Выходы (стрелки справа)
+rectangle "Отображение каталога\nс фильтрацией и поиском" as Output1 #Pink
+rectangle "Оформленные заказы\nи статусы" as Output2 #Pink
+rectangle "Отчёты и статистика\nдля администратора" as Output3 #Pink
+rectangle "Уведомления пользователям\n(email, интерфейс)" as Output4 #Pink
+
+' Связи
+Input1 --> System
+Input2 --> System
+Input3 --> System
+
+Control1 --> System
+Control2 --> System
+Control3 --> System
+
+Mech1 --> System
+Mech2 --> System
+Mech3 --> System
+
+System --> Output1
+System --> Output2
+System --> Output3
+System --> Output4
+
+' Подписи к стрелкам
+note left of Input1 : Вход
+note top of Control1 : Управление
+note bottom of Mech1 : Механизмы
+note right of Output1 : Выход
+
+@enduml

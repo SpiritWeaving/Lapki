@@ -1,0 +1,138 @@
+@startuml
+title Диаграмма доменной модели\nИнтернет-магазин зоотоваров «Лапки»
+
+' ============================================
+' === СУЩНОСТИ ===
+' ============================================
+
+class User {
+  - id: Integer
+  - username: String
+  - email: String
+  - password: String
+  - first_name: String
+  - last_name: String
+  - avatar: Image
+  - birth_date: Date
+  - created_at: DateTime
+  - is_staff: Boolean
+  - is_active: Boolean
+  --
+  + __str__(): String
+  + get_avatar_url(): String
+  + get_full_name(): String
+}
+
+class Category {
+  - id: Integer
+  - title: String
+  --
+  + __str__(): String
+}
+
+class Animal {
+  - id: Integer
+  - title: String
+  - description: Text
+  - image: Image
+  --
+  + __str__(): String
+}
+
+class Product {
+  - id: Integer
+  - title: String
+  - description: Text
+  - price: Decimal
+  - discount: Integer
+  - in_stock: Boolean
+  - box_type: Enum
+  - animal_size: Enum
+  - thumbnail: Image
+  - created_at: DateTime
+  - updated_at: DateTime
+  --
+  + __str__(): String
+  + get_final_price(): Decimal
+}
+
+class Cart {
+  - id: Integer
+  --
+  + __str__(): String
+}
+
+class CartItem {
+  - id: Integer
+  - quantity: Integer
+  --
+  + __str__(): String
+  + get_total_price(): Decimal
+}
+
+class Wishlist {
+  - id: Integer
+  --
+  + __str__(): String
+}
+
+class WishlistItem {
+  - id: Integer
+  --
+  + __str__(): String
+}
+
+class Review {
+  - id: Integer
+  - rating: Integer
+  - text: Text
+  - created_at: DateTime
+  --
+  + __str__(): String
+}
+
+' ============================================
+' === СВЯЗИ ===
+' ============================================
+
+User "1" -- "0..*" Product : создаёт
+User "1" -- "0..*" Review : пишет
+User "1" -- "1" Cart : имеет
+User "1" -- "1" Wishlist : имеет
+
+Category "1" -- "0..*" Product : содержит
+Animal "1" -- "0..*" Product : предназначен для
+
+Cart "1" -- "0..*" CartItem : содержит
+CartItem "*" -- "1" Product : ссылается на
+
+Wishlist "1" -- "0..*" WishlistItem : содержит
+WishlistItem "*" -- "1" Product : ссылается на
+
+Review "*" -- "1" Product : относится к
+Review "*" -- "1" User : написан
+
+' ============================================
+' === ПЕРЕЧИСЛЕНИЯ ===
+' ============================================
+
+enum BoxType {
+  POLYMER_BAG
+  CARDBOARD_BOX
+  DOYPACK
+  ZIP_BAG
+  CAN
+  PLASTIC_BOTTLE
+}
+
+enum AnimalSize {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+' Связи с перечислениями
+Product --> BoxType : использует
+Product --> AnimalSize : использует
+
+@enduml

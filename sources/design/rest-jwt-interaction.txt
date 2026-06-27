@@ -1,0 +1,71 @@
+@startuml
+title Взаимодействие REST API + JWT\nИнтернет-магазин зоотоваров «Лапки»
+
+' Определение участников
+actor "Пользователь" as User
+participant "React SPA" as React
+participant "Axios Interceptor" as Axios
+participant "Django REST API" as DRF
+participant "JWT Auth Middleware" as JWT
+participant "ViewSet" as ViewSet
+database "База данных" as DB
+
+' === СЦЕНАРИЙ 1: УСПЕШНЫЙ ВХОД ===
+group Успешный вход
+  User -> React : Вводит email/username и пароль
+  React -> Axios : POST /api/auth/login/
+  Axios -> DRF : Передача credentials
+  DRF -> DB : SELECT user WHERE (email=? OR username=?)
+  DB --> DRF : Данные пользователя
+  DRF -> DRF : Проверка пароля (check_password)
+  DRF -> DRF : Генерация access + refresh токенов
+  DRF --> Axios : 200 OK {access, refresh}
+  Axios --> React : Сохранение токенов в localStorage
+  React --> User : Перенаправление на главную страницу
+end
+
+' === СЦЕНАРИЙ 2: ЗАПРОС К ЗАЩИЩЁННОМУ ЭНДПОИНТУ ===
+group Запрос к защищённому эндпоинту
+  User -> React : Нажимает "Мои заказы"
+  React -> Axios : GET /api/orders/my_orders/
+  Axios -> Axios : Добавление заголовка\nAuthorization: Bearer <access>
+  Axios -> DRF : GET /api/orders/my_orders/
+  DRF -> JWT : Проверка access токена
+  alt Токен валиден
+    JWT --> DRF : user_id = 123
+    DRF -> ViewSet : Обработка запроса
+    ViewSet -> DB : SELECT * FROM orders WHERE user_id=123
+    DB --> ViewSet : Данные заказов
+    ViewSet --> DRF : Сериализация данных
+    DRF --> Axios : 200 OK {JSON}
+    Axios --> React : Отображение списка заказов
+    React --> User : Отображение списка
+  else Токен истёк (401 Unauthorized)
+    JWT --> DRF : 401 Unauthorized
+    DRF --> Axios : 401 Unauthorized
+    Axios -> Axios : Обнаружен 401\nБерёт refresh-токен из хранилища
+    Axios -> DRF : POST /api/auth/token/refresh/\n{refresh: token}
+    DRF -> DRF : Проверка refresh токена
+    alt Refresh токен валиден
+      DRF -> DRF : Генерация нового access токена
+      DRF --> Axios : 200 OK {access}
+      Axios -> Axios : Обновление access токена\nв localStorage
+      Axios -> DRF : Повтор исходного запроса\nс новым access токеном
+      DRF -> JWT : Проверка нового access токена
+      JWT --> DRF : user_id = 123
+      DRF -> ViewSet : Обработка запроса
+      ViewSet -> DB : SELECT * FROM orders WHERE user_id=123
+      DB --> ViewSet : Данные заказов
+      ViewSet --> DRF : Сериализация данных
+      DRF --> Axios : 200 OK {JSON}
+      Axios --> React : Отображение списка заказов
+      React --> User : Отображение списка
+    else Refresh токен истёк
+      DRF --> Axios : 401 Unauthorized
+      Axios -> React : Перенаправление на страницу входа
+      React --> User : Показать форму входа
+    end
+  end
+end
+
+@enduml
